@@ -1,16 +1,20 @@
 import jade.core.AID;
+import jade.core.Agent;
 import jade.core.behaviours.CyclicBehaviour;
 import jade.domain.DFService;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.domain.FIPAException;
 import jade.lang.acl.ACLMessage;
-
 import static jdk.jfr.internal.EventWriterKey.block;
 
-public class Guerreiro extends Jogabilidade {
+public class Guerreiro extends Agent {
 
     private AID[] Inimigos;
+
+    protected  int vida;
+    protected  int energia;
+    protected  int defesa;
 
     protected void setup() {
         // Inicialize os atributos do guerreiro

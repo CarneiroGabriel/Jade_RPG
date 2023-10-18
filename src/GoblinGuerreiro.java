@@ -2,9 +2,13 @@ import jade.core.behaviours.CyclicBehaviour;
 import jade.lang.acl.ACLMessage;
 
 public class GoblinGuerreiro extends Guerreiro {
+
+    protected  int vida;
+    protected  int energia;
+    protected  int defesa;
     protected void setup() {
         // Inicialize os atributos do guerreiro
-        vida = 50;
+        int vida = 50;
         energia = 15;
         defesa = 25;
         System.out.println("Olá Agente Goblin Guerreiro " + getAID().getName() + " Qual sua jogada ?");

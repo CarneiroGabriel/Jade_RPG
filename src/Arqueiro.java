@@ -1,8 +1,15 @@
 import jade.core.AID;
+import jade.core.Agent;
 import jade.core.behaviours.CyclicBehaviour;
 import jade.lang.acl.ACLMessage;
 
-public class Arqueiro extends Jogabilidade {
+public class Arqueiro extends Agent {
+
+    protected  int vida;
+    protected  int energia;
+    protected  int defesa;
+
+    public AID Inimigo;
 
     protected void setup() {
         // Inicialize os atributos do guerreiro
@@ -19,7 +26,7 @@ public class Arqueiro extends Jogabilidade {
                 if (msg != null) {
                     String conteudo = msg.getContent();
                     if (conteudo.equals("Flechada")) {
-                        Flechada(msg.getSender());
+                        Flechada(Inimigo);
                     } else if (conteudo.equals("Chuva-de-Flecha")) {
                         ChuvaDeFlecha(msg.getSender().getResolversArray());
                     } else if (conteudo.equals("Mira")) {
@@ -31,8 +38,9 @@ public class Arqueiro extends Jogabilidade {
     }
 
     protected void Flechada(AID alvo) {
-        // Lógica para calcular o sucesso do ataque e o dano
-        // Envie uma mensagem de resposta para o agente alvo
+        ACLMessage msg = new ACLMessage (ACLMessage.INFORM);
+        msg.addReceiver (new AID( alvo.getName() ,AID.ISLOCALNAME));
+        msg.setContent ("recebeAtaque");
     }
 
     protected void ChuvaDeFlecha(AID[] alvos) {

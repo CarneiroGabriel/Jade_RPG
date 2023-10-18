@@ -1,8 +1,13 @@
 import jade.core.AID;
+import jade.core.Agent;
 import jade.core.behaviours.CyclicBehaviour;
 import jade.lang.acl.ACLMessage;
 
-public class Mago extends Jogabilidade {
+public class Mago extends Agent {
+
+    protected  int vida;
+    protected  int energia;
+    protected  int defesa;
 
     protected void setup() {
         // Inicialize os atributos do guerreiro
