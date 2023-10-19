@@ -6,6 +6,7 @@ public class GoblinGuerreiro extends Guerreiro {
     protected  int vida;
     protected  int energia;
     protected  int defesa;
+    Jogabilidade Jogabilidade;
     protected void setup() {
         // Inicialize os atributos do guerreiro
         int vida = 50;
@@ -21,7 +22,10 @@ public class GoblinGuerreiro extends Guerreiro {
                 if (msg != null) {
                     String conteudo = msg.getContent();
                     if (conteudo.equals("Ataque")) {
-                        realizarAtaque(msg.getSender());
+                        String energiaValue = msg.getUserDefinedParameter("Energia");
+                        int energiaInimigo = Integer.parseInt(energiaValue);
+                        String tipoAtaque = msg.getUserDefinedParameter("TipoAtaque");
+                        Jogabilidade.recebeAtaque(vida,energiaInimigo,defesa,tipoAtaque);
                     } else if (conteudo.equals("AtaqueEmArea")) {
                         realizarAtaqueEmArea(msg.getSender().getResolversArray());
                     } else if (conteudo.equals("Defesa")) {

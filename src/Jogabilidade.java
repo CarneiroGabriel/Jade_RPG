@@ -1,4 +1,5 @@
 import java.util.Random;
+import java.util.Scanner;
 
 public class Jogabilidade {
 
@@ -37,8 +38,14 @@ public class Jogabilidade {
             int danoCausado = dano - def;
             vidaAtual = vidaAtual - danoCausado;
 
-            System.out.println("Dano Tomado de " + ataque + " : " + danoCausado);
+            System.out.println("Dano Tomado de " + ataque + ": " + danoCausado);
             System.out.println("Vida Atual: " + vidaAtual);
         }
     }
+
+    public static int scanner(){
+        Scanner scanner = new Scanner(System.in);
+        return scanner.nextInt();
+    }
+
 }

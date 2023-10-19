@@ -4,31 +4,49 @@ import jade.core.behaviours.CyclicBehaviour;
 import jade.lang.acl.ACLMessage;
 
 public class Mago extends Agent {
-
     protected  int vida;
     protected  int energia;
     protected  int defesa;
 
+    public int inimigoEscolhido;
+
+    Jogabilidade Jogabilidae;
     protected void setup() {
         // Inicialize os atributos do guerreiro
         vida = 50;
         energia = 100;
         defesa = 20;
+        String toString = null;
         System.out.println("Olá Agente Mago " + getAID().getName() + " Qual sua jogada ?");
 
         // Adicione um comportamento cíclico para lidar com mensagens recebidas
         addBehaviour(new CyclicBehaviour(this) {
-            public void action() {
-                // Verifique e trate as mensagens recebidas
-                ACLMessage msg = receive();
-                if (msg != null) {
-                    String conteudo = msg.getContent();
-                    if (conteudo.equals("Magia")) {
-                        Magia(msg.getSender());
-                    } else if (conteudo.equals("MagiaEmArea")) {
-                        MagiaEmArea(msg.getSender().getResolversArray());
-                    } else if (conteudo.equals("BuffOrDebuff")) {
-                        BuffOrDebuff(msg.getSender().getResolversArray());
+            public void action () {
+                ACLMessage msg = myAgent.receive();
+                if (msg != null ) {
+                    String content = msg.getContent();
+                    if (content.equalsIgnoreCase("Aguardando acao")){
+                        switch (Jogabilidae.scanner()) {
+                            case 1:
+                                ACLMessage sendMsg = new ACLMessage (ACLMessage.INFORM);
+                                sendMsg.addReceiver (new AID( "Inimigo",AID.ISLOCALNAME));
+                                sendMsg.setContent ("Ataque");
+                                sendMsg.addUserDefinedParameter("Energia", "" + energia);
+                                sendMsg.addUserDefinedParameter("TipoAtaque", "Magia");
+                                myAgent.send (sendMsg);
+                                break;
+                            case 2:
+
+                                break;
+                            case 3:
+                                break;
+                        };
+                    }else if (content.equalsIgnoreCase("Ataque")) {
+
+                    }else if (content.equalsIgnoreCase("AtaqueEmArea")) {
+
+                    }else {
+                        block();
                     }
                 }
             }
