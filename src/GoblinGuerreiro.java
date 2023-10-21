@@ -9,7 +9,7 @@ public class GoblinGuerreiro extends Guerreiro {
     Jogabilidade Jogabilidade;
     protected void setup() {
         // Inicialize os atributos do guerreiro
-        int vida = 50;
+        vida = 50;
         energia = 15;
         defesa = 25;
         System.out.println("Olá Agente Goblin Guerreiro " + getAID().getName() + " Qual sua jogada ?");
@@ -25,12 +25,18 @@ public class GoblinGuerreiro extends Guerreiro {
                         String energiaValue = msg.getUserDefinedParameter("Energia");
                         int energiaInimigo = Integer.parseInt(energiaValue);
                         String tipoAtaque = msg.getUserDefinedParameter("TipoAtaque");
-                        Jogabilidade.recebeAtaque(vida,energiaInimigo,defesa,tipoAtaque);
+                        vida = Jogabilidade.recebeAtaque(vida,energiaInimigo,defesa,tipoAtaque);
                     } else if (conteudo.equals("AtaqueEmArea")) {
                         realizarAtaqueEmArea(msg.getSender().getResolversArray());
-                    } else if (conteudo.equals("Defesa")) {
+                    } else if (conteudo.equals("Especial")) {
                         realizarDefesa();
-                    } else if (msg.getContent().equals("RecebeAtaque")) {
+                    } else if (msg.getContent().equals("AtaqueGoblin")) {
+                        // Responder ao ataque (por exemplo, calcular dano)
+                        System.out.println("Goblin recebeu um ataque!");
+                    }else if (msg.getContent().equals("AtaqueGoblinArea")) {
+                        // Responder ao ataque (por exemplo, calcular dano)
+                        System.out.println("Goblin recebeu um ataque!");
+                    } else if (msg.getContent().equals("EspecialGoblin")) {
                         // Responder ao ataque (por exemplo, calcular dano)
                         System.out.println("Goblin recebeu um ataque!");
                     }

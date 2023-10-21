@@ -25,23 +25,16 @@ public class Mago extends Agent {
                 ACLMessage msg = myAgent.receive();
                 if (msg != null ) {
                     String content = msg.getContent();
-                    if (content.equalsIgnoreCase("Aguardando acao")){
-                        switch (Jogabilidae.scanner()) {
-                            case 1:
+                    if (content.equalsIgnoreCase("Ataque")){
+
                                 ACLMessage sendMsg = new ACLMessage (ACLMessage.INFORM);
                                 sendMsg.addReceiver (new AID( "Inimigo",AID.ISLOCALNAME));
                                 sendMsg.setContent ("Ataque");
                                 sendMsg.addUserDefinedParameter("Energia", "" + energia);
                                 sendMsg.addUserDefinedParameter("TipoAtaque", "Magia");
                                 myAgent.send (sendMsg);
-                                break;
-                            case 2:
 
-                                break;
-                            case 3:
-                                break;
-                        };
-                    }else if (content.equalsIgnoreCase("Ataque")) {
+                    }else if (content.equalsIgnoreCase("Especial")) {
 
                     }else if (content.equalsIgnoreCase("AtaqueEmArea")) {
 

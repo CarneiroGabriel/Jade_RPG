@@ -28,19 +28,23 @@ public class Jogabilidade {
         return def;
     }
 
-    public static void recebeAtaque(int vidaAtual, int energia, int defesa, String ataque) {
+    public static int recebeAtaque(int vidaAtual, int energia, int defesa, String ataque) {
         int def = calculaDefesa(defesa);
         int dano = calculaDano(energia);
 
         if (def >= dano) {
             vidaAtual = vidaAtual + 1;
+            System.out.println("O ataque foi Tankado" );
+            return vidaAtual;
         } else {
             int danoCausado = dano - def;
             vidaAtual = vidaAtual - danoCausado;
 
             System.out.println("Dano Tomado de " + ataque + ": " + danoCausado);
             System.out.println("Vida Atual: " + vidaAtual);
+            return vidaAtual;
         }
+
     }
 
     public static int scanner(){
