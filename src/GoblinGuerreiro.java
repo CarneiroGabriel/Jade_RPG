@@ -1,3 +1,4 @@
+import jade.core.AID;
 import jade.core.behaviours.CyclicBehaviour;
 import jade.lang.acl.ACLMessage;
 
@@ -27,16 +28,30 @@ public class GoblinGuerreiro extends Guerreiro {
                         String tipoAtaque = msg.getUserDefinedParameter("TipoAtaque");
                         vida = Jogabilidade.recebeAtaque(vida,energiaInimigo,defesa,tipoAtaque);
                     } else if (conteudo.equals("AtaqueEmArea")) {
+
+
                         realizarAtaqueEmArea(msg.getSender().getResolversArray());
                     } else if (conteudo.equals("Especial")) {
+
                         realizarDefesa();
-                    } else if (msg.getContent().equals("AtaqueGoblin")) {
+                    } else if (msg.getContent().equals("AtaqueInimigo")) {
+
+                        ACLMessage sendMsg = new ACLMessage (ACLMessage.INFORM);
+                        sendMsg.addReceiver (new AID( "Jorge",AID.ISLOCALNAME));
+                        sendMsg.setContent ("AtaqueGoblin");
+                        sendMsg.addUserDefinedParameter("Energia", "" + energia);
+                        sendMsg.addUserDefinedParameter("TipoAtaque", "Espadada");
+                        myAgent.send (sendMsg);
+
+                        System.out.println("Goblin recebeu um ataque!");
+                    }else if (msg.getContent().equals("AtaqueInimigoEmArea")) {
+
+
                         // Responder ao ataque (por exemplo, calcular dano)
                         System.out.println("Goblin recebeu um ataque!");
-                    }else if (msg.getContent().equals("AtaqueGoblinArea")) {
-                        // Responder ao ataque (por exemplo, calcular dano)
-                        System.out.println("Goblin recebeu um ataque!");
-                    } else if (msg.getContent().equals("EspecialGoblin")) {
+                    } else if (msg.getContent().equals("EspecialInimigo")) {
+
+
                         // Responder ao ataque (por exemplo, calcular dano)
                         System.out.println("Goblin recebeu um ataque!");
                     }

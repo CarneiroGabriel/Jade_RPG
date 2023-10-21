@@ -38,6 +38,23 @@ public class Mago extends Agent {
 
                     }else if (content.equalsIgnoreCase("AtaqueEmArea")) {
 
+                    }else if (content.equalsIgnoreCase("AtaqueInimigo")) {
+
+                        String energiaValue = msg.getUserDefinedParameter("Energia");
+                        int energiaInimigo = Integer.parseInt(energiaValue);
+                        String tipoAtaque = msg.getUserDefinedParameter("TipoAtaque");
+                        vida = Jogabilidade.recebeAtaque(vida,energiaInimigo,defesa,tipoAtaque);
+
+                    }else if (content.equalsIgnoreCase("AtaqueInimigoEmArea")) {
+
+
+                        // Responder ao ataque (por exemplo, calcular dano)
+                        System.out.println("Goblin recebeu um ataque!");
+                    } else if (content.equalsIgnoreCase("EspecialInimigo")) {
+
+
+                        // Responder ao ataque (por exemplo, calcular dano)
+                        System.out.println("Goblin recebeu um ataque!");
                     }else {
                         block();
                     }

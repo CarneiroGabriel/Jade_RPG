@@ -13,19 +13,31 @@ public class Mestre extends  Agent{
 
         Jogabilidade.scanner();
         boolean aliadoAtaca = true;
+        int i = 1;
         while(true){
             int scanner = scanner();
             if (aliadoAtaca){
-                ACLMessage msg = new ACLMessage(ACLMessage.INFORM);
-                msg.addReceiver(new AID("Jorge", AID.ISLOCALNAME));
-                msg.setContent(qualAtaqueAliado(scanner));
-                send(msg);
-
-                aliadoAtaca= false;
+                if(i <= 3) {
+                    ACLMessage msg = new ACLMessage(ACLMessage.INFORM);
+                    msg.addReceiver(new AID("Jorge", AID.ISLOCALNAME));
+                    msg.setContent(qualAtaqueAliado(scanner));
+                    send(msg);
+                    i++;
+                }else{
+                    i = 0;
+                    aliadoAtaca= false;
+                }
             }else{
-
-
-                aliadoAtaca= true;
+                if(i <= 3) {
+                    ACLMessage msg = new ACLMessage(ACLMessage.INFORM);
+                    msg.addReceiver(new AID("Inimigo", AID.ISLOCALNAME));
+                    msg.setContent(qualAtaqueInimigo(scanner));
+                    send(msg);
+                    i++;
+                }else{
+                    i = 0;
+                    aliadoAtaca= true;
+                }
             }
 
         }
@@ -41,6 +53,19 @@ public class Mestre extends  Agent{
                     return "AtaqueEspecial";
                 case 3:
                     return "Especial";
+            }
+        }
+    }
+
+    protected String qualAtaqueInimigo(int scan){
+        while(true) {
+            switch (scan){
+                case 1:
+                    return "AtaqueInimigo";
+                case 2:
+                    return "AtaqueInimigoEmArea";
+                case 3:
+                    return "EspecialInimigo";
             }
         }
     }

@@ -1,7 +1,11 @@
+import jade.core.AID;
+
 import java.util.Random;
 import java.util.Scanner;
 
 public class Jogabilidade {
+
+    protected static AID quemAtacou;
 
     public static int D20() {
         Random random = new Random();
@@ -41,7 +45,7 @@ public class Jogabilidade {
             vidaAtual = vidaAtual - danoCausado;
 
             System.out.println("Dano Tomado de " + ataque + ": " + danoCausado);
-            System.out.println("Vida Atual: " + vidaAtual);
+            System.out.println("Vida Atual: " + vidaAtual /*+ "de " + quemAtacou.getName()*/);
             return vidaAtual;
         }
 
