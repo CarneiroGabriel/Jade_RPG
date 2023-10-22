@@ -28,7 +28,8 @@ public class Mago extends Agent {
                     if (content.equalsIgnoreCase("Ataque")){
 
                                 ACLMessage sendMsg = new ACLMessage (ACLMessage.INFORM);
-                                sendMsg.addReceiver (new AID( "Inimigo",AID.ISLOCALNAME));
+                                String NumeroInimigo = msg.getUserDefinedParameter("NumeroInimigo");
+                                sendMsg.addReceiver (new AID( "Inimigo" + NumeroInimigo,AID.ISLOCALNAME));
                                 sendMsg.setContent ("Ataque");
                                 sendMsg.addUserDefinedParameter("Energia", "" + energia);
                                 sendMsg.addUserDefinedParameter("TipoAtaque", "Magia");
@@ -45,6 +46,8 @@ public class Mago extends Agent {
                         String tipoAtaque = msg.getUserDefinedParameter("TipoAtaque");
                         vida = Jogabilidade.recebeAtaque(vida,energiaInimigo,defesa,tipoAtaque,getLocalName());
 
+                        verificaVida();
+
                     }else if (content.equalsIgnoreCase("AtaqueInimigoEmArea")) {
 
 
@@ -55,15 +58,6 @@ public class Mago extends Agent {
 
                         // Responder ao ataque (por exemplo, calcular dano)
                         System.out.println("Goblin recebeu um ataque!");
-                    }
-                    if (vida < 0){
-                        ACLMessage sendMsg = new ACLMessage (ACLMessage.INFORM);
-                        sendMsg.addReceiver (new AID( "Mestre",AID.ISLOCALNAME));
-                        sendMsg.setContent ("AliadoMorreu");
-                        sendMsg.addUserDefinedParameter("NumeroAliado", "1" /* + nInimigo */);
-                        myAgent.send (sendMsg);
-
-                        getAgent().doDelete();
                     }
                 }
             }
@@ -78,6 +72,17 @@ public class Mago extends Agent {
     protected void MagiaEmArea(AID[] alvos) {
         // Lógica para calcular o sucesso do ataque em área e o dano para cada alvo
         // Envie mensagens de resposta para os agentes alvos
+    }
+
+    public void verificaVida(){
+        if (vida < 0){
+            ACLMessage sendMsg = new ACLMessage (ACLMessage.INFORM);
+            sendMsg.addReceiver (new AID( "Mestre",AID.ISLOCALNAME));
+            sendMsg.setContent ("AliadoMorreu");
+            sendMsg.addUserDefinedParameter("NomeAgente", getLocalName());
+            send(sendMsg);
+            //getAgent().doDelete();
+        }
     }
 
     protected void BuffOrDebuff(AID[] alvos) {

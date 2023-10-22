@@ -28,7 +28,7 @@ public class GoblinGuerreiro extends Guerreiro {
                         String tipoAtaque = msg.getUserDefinedParameter("TipoAtaque");
                         vida = Jogabilidade.recebeAtaque(vida,energiaInimigo,defesa,tipoAtaque, getLocalName());
 
-
+                        verificaVida();
                     } else if (conteudo.equals("AtaqueEmArea")) {
 
 
@@ -37,9 +37,9 @@ public class GoblinGuerreiro extends Guerreiro {
 
                         realizarDefesa();
                     } else if (msg.getContent().equals("AtaqueInimigo")) {
-
+                        String NumeroInimigo = msg.getUserDefinedParameter("NumeroInimigo");
                         ACLMessage sendMsg = new ACLMessage (ACLMessage.INFORM);
-                        sendMsg.addReceiver (new AID( "Jorge",AID.ISLOCALNAME));
+                        sendMsg.addReceiver (new AID( "Aliado" + NumeroInimigo,AID.ISLOCALNAME));
                         sendMsg.setContent ("AtaqueInimigo");
                         sendMsg.addUserDefinedParameter("Energia", "" + energia);
                         sendMsg.addUserDefinedParameter("TipoAtaque", "Espadada");
@@ -54,19 +54,41 @@ public class GoblinGuerreiro extends Guerreiro {
 
                         // Responder ao ataque (por exemplo, calcular dano)
                         System.out.println("Goblin recebeu um ataque!");
-                    }
-
-                    if (vida < 0){
-                        ACLMessage sendMsg = new ACLMessage (ACLMessage.INFORM);
-                        sendMsg.addReceiver (new AID( "Mestre",AID.ISLOCALNAME));
-                        sendMsg.setContent ("InimigoMorreu");
-                        sendMsg.addUserDefinedParameter("NumeroInimigo", "1" /* + nInimigo */);
-                        myAgent.send (sendMsg);
-
-                        getAgent().doDelete();
+                    }else if(msg.getContent().equals("enviaVidaMestre")){
+                        enviaVida();
                     }
                 }
             }
         });
+    }
+
+    public void enviaMsg(String destino,String conteudo, String key1, String value1, String key2, String value2){
+        ACLMessage sendMsg = new ACLMessage (ACLMessage.INFORM);
+        sendMsg.addReceiver (new AID( destino,AID.ISLOCALNAME));
+        sendMsg.setContent (conteudo);
+        sendMsg.addUserDefinedParameter(key1, value1);
+        sendMsg.addUserDefinedParameter(key2, value2);
+        send (sendMsg);
+    }
+    public void verificaVida(){
+        if (vida < 0){
+            ACLMessage sendMsg = new ACLMessage (ACLMessage.INFORM);
+            sendMsg.addReceiver (new AID( "Mestre",AID.ISLOCALNAME));
+            sendMsg.setContent ("InimigoMorreu");
+            sendMsg.addUserDefinedParameter("NomeAgente", getLocalName());
+            send(sendMsg);
+            //getAgent().doDelete();
+        }
+    }
+
+    public void enviaVida(){
+        System.out.println("Vida do " + getLocalName() + ": " + vida);
+
+        /*ACLMessage sendMsg = new ACLMessage (ACLMessage.INFORM);
+        sendMsg.addReceiver (new AID( "Mestre",AID.ISLOCALNAME));
+        sendMsg.setContent ("VidaAliado");
+        sendMsg.addUserDefinedParameter("vida", "" + vida);
+        sendMsg.addUserDefinedParameter("Aliado", getLocalName());
+        send (sendMsg);*/
     }
 }
