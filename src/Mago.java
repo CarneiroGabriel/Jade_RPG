@@ -8,7 +8,7 @@ public class Mago extends Agent {
     protected  int energia;
     protected  int defesa;
 
-    public int inimigoEscolhido;
+
 
     Jogabilidade Jogabilidae;
     protected void setup() {
@@ -43,7 +43,7 @@ public class Mago extends Agent {
                         String energiaValue = msg.getUserDefinedParameter("Energia");
                         int energiaInimigo = Integer.parseInt(energiaValue);
                         String tipoAtaque = msg.getUserDefinedParameter("TipoAtaque");
-                        vida = Jogabilidade.recebeAtaque(vida,energiaInimigo,defesa,tipoAtaque);
+                        vida = Jogabilidade.recebeAtaque(vida,energiaInimigo,defesa,tipoAtaque,getLocalName());
 
                     }else if (content.equalsIgnoreCase("AtaqueInimigoEmArea")) {
 
@@ -55,8 +55,15 @@ public class Mago extends Agent {
 
                         // Responder ao ataque (por exemplo, calcular dano)
                         System.out.println("Goblin recebeu um ataque!");
-                    }else {
-                        block();
+                    }
+                    if (vida < 0){
+                        ACLMessage sendMsg = new ACLMessage (ACLMessage.INFORM);
+                        sendMsg.addReceiver (new AID( "Mestre",AID.ISLOCALNAME));
+                        sendMsg.setContent ("AliadoMorreu");
+                        sendMsg.addUserDefinedParameter("NumeroAliado", "1" /* + nInimigo */);
+                        myAgent.send (sendMsg);
+
+                        getAgent().doDelete();
                     }
                 }
             }

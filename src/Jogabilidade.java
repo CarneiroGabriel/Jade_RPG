@@ -5,7 +5,6 @@ import java.util.Scanner;
 
 public class Jogabilidade {
 
-    protected static AID quemAtacou;
 
     public static int D20() {
         Random random = new Random();
@@ -32,12 +31,12 @@ public class Jogabilidade {
         return def;
     }
 
-    public static int recebeAtaque(int vidaAtual, int energia, int defesa, String ataque) {
+    public static int recebeAtaque(int vidaAtual, int energia, int defesa, String ataque, String nome) {
         int def = calculaDefesa(defesa);
         int dano = calculaDano(energia);
 
         if (def >= dano) {
-            vidaAtual = vidaAtual + 1;
+            //vidaAtual = vidaAtual + 1;
             System.out.println("O ataque foi Tankado" );
             return vidaAtual;
         } else {
@@ -45,15 +44,10 @@ public class Jogabilidade {
             vidaAtual = vidaAtual - danoCausado;
 
             System.out.println("Dano Tomado de " + ataque + ": " + danoCausado);
-            System.out.println("Vida Atual: " + vidaAtual /*+ "de " + quemAtacou.getName()*/);
+            System.out.println("Vida Atual: " + vidaAtual + " de " + nome);
             return vidaAtual;
         }
 
-    }
-
-    public static int scanner(){
-        Scanner scanner = new Scanner(System.in);
-        return scanner.nextInt();
     }
 
 }

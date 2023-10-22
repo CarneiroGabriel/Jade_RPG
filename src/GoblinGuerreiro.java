@@ -11,7 +11,7 @@ public class GoblinGuerreiro extends Guerreiro {
     protected void setup() {
         // Inicialize os atributos do guerreiro
         vida = 50;
-        energia = 15;
+        energia = 100;
         defesa = 25;
         System.out.println("Olá Agente Goblin Guerreiro " + getAID().getName() + " Qual sua jogada ?");
 
@@ -26,7 +26,9 @@ public class GoblinGuerreiro extends Guerreiro {
                         String energiaValue = msg.getUserDefinedParameter("Energia");
                         int energiaInimigo = Integer.parseInt(energiaValue);
                         String tipoAtaque = msg.getUserDefinedParameter("TipoAtaque");
-                        vida = Jogabilidade.recebeAtaque(vida,energiaInimigo,defesa,tipoAtaque);
+                        vida = Jogabilidade.recebeAtaque(vida,energiaInimigo,defesa,tipoAtaque, getLocalName());
+
+
                     } else if (conteudo.equals("AtaqueEmArea")) {
 
 
@@ -38,12 +40,10 @@ public class GoblinGuerreiro extends Guerreiro {
 
                         ACLMessage sendMsg = new ACLMessage (ACLMessage.INFORM);
                         sendMsg.addReceiver (new AID( "Jorge",AID.ISLOCALNAME));
-                        sendMsg.setContent ("AtaqueGoblin");
+                        sendMsg.setContent ("AtaqueInimigo");
                         sendMsg.addUserDefinedParameter("Energia", "" + energia);
                         sendMsg.addUserDefinedParameter("TipoAtaque", "Espadada");
                         myAgent.send (sendMsg);
-
-                        System.out.println("Goblin recebeu um ataque!");
                     }else if (msg.getContent().equals("AtaqueInimigoEmArea")) {
 
 
@@ -54,6 +54,16 @@ public class GoblinGuerreiro extends Guerreiro {
 
                         // Responder ao ataque (por exemplo, calcular dano)
                         System.out.println("Goblin recebeu um ataque!");
+                    }
+
+                    if (vida < 0){
+                        ACLMessage sendMsg = new ACLMessage (ACLMessage.INFORM);
+                        sendMsg.addReceiver (new AID( "Mestre",AID.ISLOCALNAME));
+                        sendMsg.setContent ("InimigoMorreu");
+                        sendMsg.addUserDefinedParameter("NumeroInimigo", "1" /* + nInimigo */);
+                        myAgent.send (sendMsg);
+
+                        getAgent().doDelete();
                     }
                 }
             }
