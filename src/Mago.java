@@ -17,7 +17,7 @@ public class Mago extends Agent {
         energia = 100;
         defesa = 20;
         String toString = null;
-        System.out.println("Olá Agente Mago " + getAID().getName() + " Qual sua jogada ?");
+        //System.out.println("Olá Agente Mago " + getAID().getName() + " Qual sua jogada ?");
 
         // Adicione um comportamento cíclico para lidar com mensagens recebidas
         addBehaviour(new CyclicBehaviour(this) {
@@ -80,6 +80,7 @@ public class Mago extends Agent {
             sendMsg.addReceiver (new AID( "Mestre",AID.ISLOCALNAME));
             sendMsg.setContent ("AliadoMorreu");
             sendMsg.addUserDefinedParameter("NomeAgente", getLocalName());
+            sendMsg.addUserDefinedParameter("vida", "" + vida);
             send(sendMsg);
             //getAgent().doDelete();
         }

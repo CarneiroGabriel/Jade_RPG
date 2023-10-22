@@ -1,9 +1,11 @@
 import jade.core.AID;
+import jade.core.Agent;
+import jade.lang.acl.ACLMessage;
 
 import java.util.Random;
 import java.util.Scanner;
 
-public class Jogabilidade {
+public class Jogabilidade{
 
 
     public static int D20() {

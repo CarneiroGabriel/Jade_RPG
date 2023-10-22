@@ -13,7 +13,7 @@ public class GoblinGuerreiro extends Guerreiro {
         vida = 50;
         energia = 100;
         defesa = 25;
-        System.out.println("Olá Agente Goblin Guerreiro " + getAID().getName() + " Qual sua jogada ?");
+        //System.out.println("Olá Agente Goblin Guerreiro " + getAID().getName() + " Qual sua jogada ?");
 
         // Adicione um comportamento cíclico para lidar com mensagens recebidas
         addBehaviour(new CyclicBehaviour(this) {
@@ -38,12 +38,14 @@ public class GoblinGuerreiro extends Guerreiro {
                         realizarDefesa();
                     } else if (msg.getContent().equals("AtaqueInimigo")) {
                         String NumeroInimigo = msg.getUserDefinedParameter("NumeroInimigo");
+                        enviaMsg("Aliado" + NumeroInimigo,"AtaqueInimigo","Energia", "" + energia,"TipoAtaque", "Espadada");
+                        /*
                         ACLMessage sendMsg = new ACLMessage (ACLMessage.INFORM);
                         sendMsg.addReceiver (new AID( "Aliado" + NumeroInimigo,AID.ISLOCALNAME));
                         sendMsg.setContent ("AtaqueInimigo");
                         sendMsg.addUserDefinedParameter("Energia", "" + energia);
                         sendMsg.addUserDefinedParameter("TipoAtaque", "Espadada");
-                        myAgent.send (sendMsg);
+                        myAgent.send (sendMsg);*/
                     }else if (msg.getContent().equals("AtaqueInimigoEmArea")) {
 
 
@@ -71,11 +73,12 @@ public class GoblinGuerreiro extends Guerreiro {
         send (sendMsg);
     }
     public void verificaVida(){
-        if (vida < 0){
-            ACLMessage sendMsg = new ACLMessage (ACLMessage.INFORM);
-            sendMsg.addReceiver (new AID( "Mestre",AID.ISLOCALNAME));
-            sendMsg.setContent ("InimigoMorreu");
+        if(vida<0){
+            ACLMessage sendMsg = new ACLMessage(ACLMessage.INFORM);
+            sendMsg.addReceiver(new AID("Mestre", AID.ISLOCALNAME));
+            sendMsg.setContent("InimigoMorreu");
             sendMsg.addUserDefinedParameter("NomeAgente", getLocalName());
+            sendMsg.addUserDefinedParameter("vida", "" + vida);
             send(sendMsg);
             //getAgent().doDelete();
         }

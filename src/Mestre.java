@@ -1,5 +1,7 @@
 import jade.core.AID;
 import jade.core.Agent;
+import jade.core.behaviours.Behaviour;
+import jade.core.behaviours.CyclicBehaviour;
 import jade.lang.acl.ACLMessage;
 
 import java.util.*;
@@ -7,7 +9,7 @@ import java.util.*;
 public class Mestre extends  Agent{
     protected void setup() {
         // Configurar o ambiente JADE
-        System.out.println("Olá Mestre " + getAID().getName() + " Qual sua jogada ?");
+        //System.out.println("Olá Mestre " + getAID().getName() + " Qual sua jogada ?");
 
 
         boolean aliadoAtaca = true;
@@ -24,33 +26,39 @@ public class Mestre extends  Agent{
                     String conteudo = msgReceive.getContent();
                     if (conteudo.equals("InimigoMorreu")) {
 
+                        int vida = Integer.parseInt(msgReceive.getUserDefinedParameter("vida"));
                         String NomeAgente = msgReceive.getUserDefinedParameter("NomeAgente");
-                        int numero = inimigoMorto(NomeAgente);
-                        System.out.println("O inimigo " + numero + " Morreu");
-                        inimigos[numero -1] = 0;
-                        System.out.println(Arrays.toString(inimigos));
-                        System.out.println(Arrays.toString(posicaoInimigos));
-                        posicaoInimigos = encontrarPosicoesDosUns(inimigos);
-                        if (posicaoInimigos.length == 0) {
+                        if(vida<=0) {
+                            int numero = inimigoMorto(NomeAgente);
+                            System.out.println("O inimigo " + numero + " Morreu");
+                            inimigos[numero - 1] = 0;
+                            System.out.println(Arrays.toString(inimigos));
+                            System.out.println(Arrays.toString(posicaoInimigos));
+                            posicaoInimigos = encontrarPosicoesDosUns(inimigos);
+                            if (posicaoInimigos.length == 0) {
 
-                            System.out.println("A batalha foi ganha pelos aliados");
-                            break;
+                                System.out.println("A batalha foi ganha pelos aliados");
+                                break;
+                            }
                         }
 
                     }else if (conteudo.equals("AliadoMorreu")){
+                        int vida = Integer.parseInt(msgReceive.getUserDefinedParameter("vida"));
+                        if(vida<=0) {
 
-                        String NomeAgente = msgReceive.getUserDefinedParameter("NomeAgente");
-                        int numero = aliadoMorto(NomeAgente);
-                        System.out.println("O Aliado " + numero + " Morreu");
-                        aliados[numero -1] = 0;
-                        System.out.println(Arrays.toString(aliados));
-                        System.out.println(Arrays.toString(posicaoAliados));
-                        posicaoAliados = encontrarPosicoesDosUns(aliados);
+                            String NomeAgente = msgReceive.getUserDefinedParameter("NomeAgente");
+                            int numero = aliadoMorto(NomeAgente);
+                            System.out.println("O Aliado " + numero + " Morreu");
+                            aliados[numero - 1] = 0;
+                            System.out.println(Arrays.toString(aliados));
+                            System.out.println(Arrays.toString(posicaoAliados));
+                            posicaoAliados = encontrarPosicoesDosUns(aliados);
 
-                        if (posicaoAliados.length == 0) {
+                            if (posicaoAliados.length == 0) {
 
-                            System.out.println("A batalha foi ganha pelos Inimigos");
-                            break;
+                                System.out.println("A batalha foi ganha pelos Inimigos");
+                                break;
+                            }
                         }
                     }
                 }
@@ -58,7 +66,7 @@ public class Mestre extends  Agent{
             if (aliadoAtaca){
                 if(i < contarUns(aliados)) {
                     System.out.println("I aliado " + i);
-                    int vez = posicaoAliados[i];
+                    int vez = posicaoAliados[i] + 1;
 
 
                     ACLMessage msg = new ACLMessage(ACLMessage.INFORM);
@@ -76,7 +84,7 @@ public class Mestre extends  Agent{
             }else{
                 if(i < contarUns(inimigos)) {
                     System.out.println("I Inimigo " + i);
-                    int vez = posicaoInimigos[i];
+                    int vez = posicaoInimigos[i] + 1;
                     ACLMessage msg = new ACLMessage(ACLMessage.INFORM);
                     msg.addReceiver(new AID("Inimigo" + vez , AID.ISLOCALNAME));
                     msg.addUserDefinedParameter("NumeroInimigo", "" + EscolherInimigo(aliados, "Aliado"));
