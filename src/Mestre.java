@@ -30,8 +30,8 @@ public class Mestre extends  Agent{
                         inimigos[numero -1] = 0;
                         System.out.println(Arrays.toString(inimigos));
                         System.out.println(Arrays.toString(posicaoInimigos));
-
-                        if (posicaoInimigos == null) {
+                        posicaoInimigos = encontrarPosicoesDosUns(inimigos);
+                        if (posicaoInimigos.length == 0) {
 
                             System.out.println("A batalha foi ganha pelos aliados");
                             break;
@@ -45,8 +45,9 @@ public class Mestre extends  Agent{
                         aliados[numero -1] = 0;
                         System.out.println(Arrays.toString(aliados));
                         System.out.println(Arrays.toString(posicaoAliados));
+                        posicaoAliados = encontrarPosicoesDosUns(aliados);
 
-                        if (posicaoAliados == null) {
+                        if (posicaoAliados.length == 0) {
 
                             System.out.println("A batalha foi ganha pelos Inimigos");
                             break;
@@ -56,7 +57,9 @@ public class Mestre extends  Agent{
 
             if (aliadoAtaca){
                 if(i < contarUns(aliados)) {
-                    int vez = posicaoInimigos[i] + 1;
+                    System.out.println("I aliado " + i);
+                    int vez = posicaoAliados[i];
+
 
                     ACLMessage msg = new ACLMessage(ACLMessage.INFORM);
                     msg.addReceiver(new AID("Aliado" + vez, AID.ISLOCALNAME));
@@ -69,11 +72,11 @@ public class Mestre extends  Agent{
                 }else{
                     i = 0;
                     aliadoAtaca= false;
-                    continue;
                 }
             }else{
                 if(i < contarUns(inimigos)) {
-                    int vez = posicaoAliados[i] + 1;
+                    System.out.println("I Inimigo " + i);
+                    int vez = posicaoInimigos[i];
                     ACLMessage msg = new ACLMessage(ACLMessage.INFORM);
                     msg.addReceiver(new AID("Inimigo" + vez , AID.ISLOCALNAME));
                     msg.addUserDefinedParameter("NumeroInimigo", "" + EscolherInimigo(aliados, "Aliado"));
@@ -85,7 +88,6 @@ public class Mestre extends  Agent{
                 }else{
                     i = 0;
                     aliadoAtaca= true;
-                    continue;
                 }
             }
             pedeVidaBatalha(inimigos);
