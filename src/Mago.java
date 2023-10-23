@@ -8,16 +8,11 @@ public class Mago extends Agent {
     protected  int energia;
     protected  int defesa;
 
-
-
-    Jogabilidade Jogabilidae;
     protected void setup() {
         // Inicialize os atributos do guerreiro
         vida = 50;
         energia = 100;
         defesa = 20;
-        String toString = null;
-        //System.out.println("Olá Agente Mago " + getAID().getName() + " Qual sua jogada ?");
 
         // Adicione um comportamento cíclico para lidar com mensagens recebidas
         addBehaviour(new CyclicBehaviour(this) {
@@ -27,18 +22,15 @@ public class Mago extends Agent {
                     String content = msg.getContent();
                     if (content.equalsIgnoreCase("Ataque")){
 
-                                ACLMessage sendMsg = new ACLMessage (ACLMessage.INFORM);
                                 String NumeroInimigo = msg.getUserDefinedParameter("NumeroInimigo");
-                                sendMsg.addReceiver (new AID( "Inimigo" + NumeroInimigo,AID.ISLOCALNAME));
-                                sendMsg.setContent ("Ataque");
-                                sendMsg.addUserDefinedParameter("Energia", "" + energia);
-                                sendMsg.addUserDefinedParameter("TipoAtaque", "Magia");
-                                myAgent.send (sendMsg);
+
+                                enviaMsg("Inimigo" + NumeroInimigo,"Ataque","Energia", "" + energia,"TipoAtaque", "Magia");
+
 
                     }else if (content.equalsIgnoreCase("Especial")) {
-
+                        DeBuff();
                     }else if (content.equalsIgnoreCase("AtaqueEmArea")) {
-
+                        ataqueEmArea();
                     }else if (content.equalsIgnoreCase("AtaqueInimigo")) {
 
                         String energiaValue = msg.getUserDefinedParameter("Energia");
@@ -50,28 +42,40 @@ public class Mago extends Agent {
 
                     }else if (content.equalsIgnoreCase("AtaqueInimigoEmArea")) {
 
+                        String energiaValue = msg.getUserDefinedParameter("Energia");
+                        int energiaInimigo = Integer.parseInt(energiaValue);
+                        String tipoAtaque = msg.getUserDefinedParameter("TipoAtaque");
+                        vida = Jogabilidade.recebeAtaque(vida,energiaInimigo,defesa,tipoAtaque, getLocalName(),true);
 
-                        // Responder ao ataque (por exemplo, calcular dano)
-                        System.out.println("Goblin recebeu um ataque!");
+                        verificaVida();
                     } else if (content.equalsIgnoreCase("EspecialInimigo")) {
 
 
                         // Responder ao ataque (por exemplo, calcular dano)
-                        System.out.println("Goblin recebeu um ataque!");
                     }
                 }
             }
         });
     }
 
-    protected void Magia(AID alvo) {
-        // Lógica para calcular o sucesso do ataque e o dano
-        // Envie uma mensagem de resposta para o agente alvo
+    public void enviaMsg(String destino,String conteudo, String key1, String value1, String key2, String value2){
+        ACLMessage sendMsg = new ACLMessage (ACLMessage.INFORM);
+        sendMsg.addReceiver (new AID( destino,AID.ISLOCALNAME));
+        sendMsg.setContent (conteudo);
+        sendMsg.addUserDefinedParameter(key1, value1);
+        sendMsg.addUserDefinedParameter(key2, value2);
+        send (sendMsg);
     }
 
-    protected void MagiaEmArea(AID[] alvos) {
-        // Lógica para calcular o sucesso do ataque em área e o dano para cada alvo
-        // Envie mensagens de resposta para os agentes alvos
+    public void ataqueEmArea(){
+        ACLMessage sendMsg = new ACLMessage (ACLMessage.INFORM);
+        sendMsg.addReceiver (new AID( "Inimigo1",AID.ISLOCALNAME));
+        sendMsg.addReceiver (new AID( "Inimigo2",AID.ISLOCALNAME));
+        sendMsg.addReceiver (new AID( "Inimigo3",AID.ISLOCALNAME));
+        sendMsg.setContent ("AtaqueEmArea");
+        sendMsg.addUserDefinedParameter("Energia", "" + energia);
+        sendMsg.addUserDefinedParameter("TipoAtaque", "Magia em Area");
+        send (sendMsg);
     }
 
     public void verificaVida(){
@@ -86,9 +90,15 @@ public class Mago extends Agent {
         }
     }
 
-    protected void BuffOrDebuff(AID[] alvos) {
-        energia = energia * 2;
-        defesa = defesa * 2;
-        vida =+ 10;
+    protected void DeBuff() {
+
+        ACLMessage sendMsg = new ACLMessage (ACLMessage.INFORM);
+        sendMsg.addReceiver (new AID( "Inimigo1",AID.ISLOCALNAME));
+        sendMsg.addReceiver (new AID( "Inimigo2",AID.ISLOCALNAME));
+        sendMsg.addReceiver (new AID( "Inimigo3",AID.ISLOCALNAME));
+        sendMsg.setContent ("Debuff");
+        sendMsg.addUserDefinedParameter("Energia", "" + Jogabilidade.D20());
+        sendMsg.addUserDefinedParameter("TipoAtaque", "Debuff em Area");
+        send (sendMsg);
     }
 }

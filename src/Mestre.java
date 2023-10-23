@@ -32,8 +32,7 @@ public class Mestre extends  Agent{
                             int numero = inimigoMorto(NomeAgente);
                             System.out.println("O inimigo " + numero + " Morreu");
                             inimigos[numero - 1] = 0;
-                            System.out.println(Arrays.toString(inimigos));
-                            System.out.println(Arrays.toString(posicaoInimigos));
+
                             posicaoInimigos = encontrarPosicoesDosUns(inimigos);
                             if (posicaoInimigos.length == 0) {
 
@@ -50,8 +49,7 @@ public class Mestre extends  Agent{
                             int numero = aliadoMorto(NomeAgente);
                             System.out.println("O Aliado " + numero + " Morreu");
                             aliados[numero - 1] = 0;
-                            System.out.println(Arrays.toString(aliados));
-                            System.out.println(Arrays.toString(posicaoAliados));
+
                             posicaoAliados = encontrarPosicoesDosUns(aliados);
 
                             if (posicaoAliados.length == 0) {
@@ -65,7 +63,6 @@ public class Mestre extends  Agent{
 
             if (aliadoAtaca){
                 if(i < contarUns(aliados)) {
-                    System.out.println("I aliado " + i);
                     int vez = posicaoAliados[i] + 1;
 
 
@@ -83,7 +80,6 @@ public class Mestre extends  Agent{
                 }
             }else{
                 if(i < contarUns(inimigos)) {
-                    System.out.println("I Inimigo " + i);
                     int vez = posicaoInimigos[i] + 1;
                     ACLMessage msg = new ACLMessage(ACLMessage.INFORM);
                     msg.addReceiver(new AID("Inimigo" + vez , AID.ISLOCALNAME));

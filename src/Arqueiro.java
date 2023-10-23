@@ -8,14 +8,15 @@ public class Arqueiro extends Agent {
     protected  int vida;
     protected  int energia;
     protected  int defesa;
+    public boolean miraUp;
 
-    public AID Inimigo;
 
     protected void setup() {
         // Inicialize os atributos do guerreiro
         vida = 70;
         energia = 70;
         defesa = 30;
+        int energiabkp = energia;
         System.out.println("Olá Agente Arqueiro " + getAID().getName() + " Qual sua jogada ?");
 
         // Adicione um comportamento cíclico para lidar com mensagens recebidas
@@ -23,32 +24,91 @@ public class Arqueiro extends Agent {
             public void action() {
                 // Verifique e trate as mensagens recebidas
                 ACLMessage msg = receive();
-                if (msg != null) {
-                    String conteudo = msg.getContent();
-                    if (conteudo.equals("Flechada")) {
-                        Flechada(Inimigo);
-                    } else if (conteudo.equals("Chuva-de-Flecha")) {
-                        ChuvaDeFlecha(msg.getSender().getResolversArray());
-                    } else if (conteudo.equals("Mira")) {
-                        Mira();
+                if (msg != null ) {
+                    String content = msg.getContent();
+                    if (content.equalsIgnoreCase("Ataque")){
+
+                        String NumeroInimigo = msg.getUserDefinedParameter("NumeroInimigo");
+
+                        enviaMsg("Inimigo" + NumeroInimigo,"Ataque","Energia", "" + energia,"TipoAtaque", "Flechada");
+                        if(miraUp){
+                            energia = energiabkp;
+                        }
+
+                    }else if (content.equalsIgnoreCase("Especial")) {
+
+                    }else if (content.equalsIgnoreCase("AtaqueEmArea")) {
+                        ataqueEmArea();
+
+                        if(miraUp){
+                            energia = energiabkp;
+                        }
+                    }else if (content.equalsIgnoreCase("AtaqueInimigo")) {
+
+                        String energiaValue = msg.getUserDefinedParameter("Energia");
+                        int energiaInimigo = Integer.parseInt(energiaValue);
+                        String tipoAtaque = msg.getUserDefinedParameter("TipoAtaque");
+                        vida = Jogabilidade.recebeAtaque(vida,energiaInimigo,defesa,tipoAtaque,getLocalName());
+
+                        verificaVida();
+
+                    }else if (content.equalsIgnoreCase("AtaqueInimigoEmArea")) {
+
+                        String energiaValue = msg.getUserDefinedParameter("Energia");
+                        int energiaInimigo = Integer.parseInt(energiaValue);
+                        String tipoAtaque = msg.getUserDefinedParameter("TipoAtaque");
+                        vida = Jogabilidade.recebeAtaque(vida,energiaInimigo,defesa,tipoAtaque, getLocalName(),true);
+
+                        verificaVida();
+                    } else if (content.equalsIgnoreCase("EspecialInimigo")) {
+
+
                     }
                 }
             }
         });
     }
 
-    protected void Flechada(AID alvo) {
-        ACLMessage msg = new ACLMessage (ACLMessage.INFORM);
-        msg.addReceiver (new AID( alvo.getName() ,AID.ISLOCALNAME));
-        msg.setContent ("recebeAtaque");
+
+    public void enviaMsg(String destino,String conteudo, String key1, String value1, String key2, String value2){
+        ACLMessage sendMsg = new ACLMessage (ACLMessage.INFORM);
+        sendMsg.addReceiver (new AID( destino,AID.ISLOCALNAME));
+        sendMsg.setContent (conteudo);
+        sendMsg.addUserDefinedParameter(key1, value1);
+        sendMsg.addUserDefinedParameter(key2, value2);
+        send(sendMsg);
     }
 
-    protected void ChuvaDeFlecha(AID[] alvos) {
-        // Lógica para calcular o sucesso do ataque em área e o dano para cada alvo
-        // Envie mensagens de resposta para os agentes alvos
+    public void ataqueEmArea(){
+
+
+        ACLMessage sendMsg = new ACLMessage (ACLMessage.INFORM);
+        sendMsg.addReceiver (new AID( "Inimigo1",AID.ISLOCALNAME));
+        sendMsg.addReceiver (new AID( "Inimigo2",AID.ISLOCALNAME));
+        sendMsg.addReceiver (new AID( "Inimigo3",AID.ISLOCALNAME));
+        sendMsg.setContent ("AtaqueEmArea");
+        sendMsg.addUserDefinedParameter("Energia", "" + energia);
+        sendMsg.addUserDefinedParameter("TipoAtaque", "Chuva de Flechas");
+        send(sendMsg);
     }
+
+    public void verificaVida(){
+        if(vida<0){
+            ACLMessage sendMsg = new ACLMessage(ACLMessage.INFORM);
+            sendMsg.addReceiver(new AID("Mestre", AID.ISLOCALNAME));
+            sendMsg.setContent("InimigoMorreu");
+            sendMsg.addUserDefinedParameter("NomeAgente", getLocalName());
+            sendMsg.addUserDefinedParameter("vida", "" + vida);
+            send(sendMsg);
+            //getAgent().doDelete();
+        }
+    }
+
 
     protected void Mira() {
-        energia = energia * 2;
+        energia = energia + Jogabilidade.D20();
+
+        miraUp = true;
     }
 }
+
