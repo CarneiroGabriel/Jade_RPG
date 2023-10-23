@@ -7,6 +7,10 @@ import java.util.Scanner;
 
 public class Jogabilidade{
 
+    public static int Dado(int tamanho) {
+        Random random = new Random();
+        return random.nextInt(tamanho);
+    }
 
     public static int D20() {
         Random random = new Random();

@@ -62,8 +62,10 @@ public class Mestre extends  Agent{
                 }
 
             if (aliadoAtaca){
-                if(i < contarUns(aliados)) {
-                    int vez = posicaoAliados[i] + 1;
+                //turnos dos aliados
+
+                if(i < contarUns(aliados)) {// contador de aliados vivos
+                    int vez = posicaoAliados[i] + 1; //posição dos aliados
 
 
                     ACLMessage msg = new ACLMessage(ACLMessage.INFORM);
@@ -79,13 +81,14 @@ public class Mestre extends  Agent{
                     aliadoAtaca= false;
                 }
             }else{
+
+                //turno Inimigo
                 if(i < contarUns(inimigos)) {
                     int vez = posicaoInimigos[i] + 1;
                     ACLMessage msg = new ACLMessage(ACLMessage.INFORM);
                     msg.addReceiver(new AID("Inimigo" + vez , AID.ISLOCALNAME));
-                    msg.addUserDefinedParameter("NumeroInimigo", "" + EscolherInimigo(aliados, "Aliado"));
-                    dialogoBatalha();
-                    msg.setContent(qualAtaqueInimigo(scanner()));
+                    msg.addUserDefinedParameter("NumeroInimigo", "" + EscolherAliado(aliados, "Aliado"));
+                    msg.setContent(qualAtaqueInimigo(Jogabilidade.Dado(3)));
                     send(msg);
                     i++;
 
@@ -96,7 +99,7 @@ public class Mestre extends  Agent{
             }
             pedeVidaBatalha(inimigos);
             pedeVidaBatalha(aliados);
-
+            doWait(1000);
             }
 
         }
@@ -216,6 +219,31 @@ public class Mestre extends  Agent{
                 }
             }
         }
+
+    public int EscolherAliado(int[] inimigos, String nomeInimigo){
+        // 0 representa indisponível, 1 representa disponível
+
+
+        while (true) {
+
+            //System.out.println("Escolha seu "+ nomeInimigo +" :");
+            for (int i = 0; i < inimigos.length; i++) {
+                if (inimigos[i] == 1) {
+                    int f = 1 + i;
+                    //System.out.println(nomeInimigo + " " + f + " vivo");
+
+                }
+            }
+
+            int D3 = Math.round(Jogabilidade.Dado(3));
+            if (D3 <= inimigos.length) {
+                if (inimigos[D3] == 1) {
+                    //System.out.println("Você irá atacar o Inimigo " + scanner);
+                    return Jogabilidade.Dado(3) ;
+                }
+            }
+        }
+    }
 
     public int[] encontrarPosicoesDosUns(int[] array) {
         int count = 0;
